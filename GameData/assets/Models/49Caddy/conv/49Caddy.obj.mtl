@@ -1,0 +1,69 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v3.0.1270)
+
+newmtl JoinedMaterial_#26
+kd 1 1 1
+ka 0 0 0
+ks 1 1 1
+d 1
+illum 1
+
+newmtl New material 008
+kd 1 1 1
+ka 0 0 0
+ks 1 1 1
+d 0.09
+illum 1
+
+newmtl JoinedMaterial_#12
+kd 0.501961 0.501961 0.501961
+ka 0 0 0
+ks 1 1 1
+d 1
+illum 1
+map_kd HEADLI~2.JPG
+
+newmtl New material 006
+kd 0.00784314 0.156863 0.352941
+ka 0 0 0
+ks 1 1 1
+d 1
+illum 1
+
+newmtl New material 014
+kd 1 0 0
+ka 0 0 0
+ks 1 1 1
+d 0.52
+illum 1
+
+newmtl JoinedMaterial_#27
+kd 0.501961 0.501961 0.501961
+ka 0 0 0
+ks 1 1 1
+d 1
+illum 1
+map_kd WHITEW~2.JPG
+
+newmtl New material 010
+kd 0.396078 0.760784 0.94902
+ka 0 0 0
+ks 1 1 1
+d 1
+illum 1
+
+newmtl New material 004
+kd 0 0 0
+ka 0 0 0
+ks 1 1 1
+d 1
+illum 1
+
+newmtl mat158
+kd 0.501961 0.501961 0.501961
+ka 0 0 0
+ks 1 1 1
+d 1
+illum 1
+map_kd plate2.jpg
+
