@@ -17,6 +17,7 @@ import de.gamebasis.gamepluginsync.GamePluginListMessage;
 import de.gamebasis.pluginsystem.GamePluginManager;
 import de.gamebasis.serverlistener.ServerListener;
 import de.gamebasislib.console.GameConsoleMessage;
+import de.gamebasislib.database.Database;
 import de.gamebasislib.gameworld.GameWorldHeightMap;
 import de.gamebasislib.player.PlayerPosMessage;
 import java.io.IOException;
@@ -90,6 +91,7 @@ public class ServerMain extends SimpleApplication {
     public void destroy() {
         //Server beenden und GameWorld speichern
         this.server.close();
+        Database.getInstance().close();
         super.destroy();
     }
 }
