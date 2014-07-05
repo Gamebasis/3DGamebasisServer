@@ -14,13 +14,17 @@ import com.jme3.system.JmeContext;
 import de.gamebasis.clientstatelistener.ServerConnectionManager;
 import de.gamebasis.console.GameConsole;
 import de.gamebasis.gamepluginsync.GamePluginListMessage;
+import de.gamebasis.gamesettings.GameSettings;
 import de.gamebasis.pluginsystem.GamePluginManager;
 import de.gamebasis.serverlistener.ServerListener;
 import de.gamebasislib.console.GameConsoleMessage;
 import de.gamebasislib.database.Database;
+import de.gamebasislib.database.DatabaseChecker;
+import de.gamebasislib.gameworld.GameWorld;
 import de.gamebasislib.gameworld.GameWorldHeightMap;
 import de.gamebasislib.player.PlayerPosMessage;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +39,8 @@ public class ServerMain extends SimpleApplication {
     
     protected ServerConnectionManager serverconnectionlistener = null;
     protected GameConsole gameconsole = new GameConsole();
+    
+    protected GameWorld gameworld = null;
 
     public static void main(String[] args) {
         //Neue Instanz erstellen
@@ -62,6 +68,24 @@ public class ServerMain extends SimpleApplication {
             this.server = Network.createServer(this.port);
             this.server.start();
             
+            //SQLite laden
+            Database database = new Database("GameData/sqlite/sqlite.db");
+            database.open();
+            Database.setInstance(database);
+            
+            if (!database.isConnected()) {
+                Logger.getLogger(ServerMain.class.getName()).log(Level.WARNING, "Database is not connected!");
+            }
+            
+            try {
+                //SQLite checken
+                DatabaseChecker databasechecker = new DatabaseChecker();
+                databasechecker.checkDatabase();
+            } catch (SQLException ex) {
+                Logger.getLogger(ServerMain.class.getName()).log(Level.SEVERE, null, ex);
+                this.stop();
+            }
+            
             //MessageListener hinzufügen
             this.server.addMessageListener(new ServerListener(), GameWorldHeightMap.class);
             this.server.addMessageListener(this.gameconsole, GameConsoleMessage.class);
@@ -69,9 +93,21 @@ public class ServerMain extends SimpleApplication {
             //ConnectionListener hinzufügen
             this.serverconnectionlistener = new ServerConnectionManager(this, this.server);
             
+            //GameSettings laden
+            GameSettings gamesettings = new GameSettings();
+            gamesettings.loadGameSettings();
+            GameSettings.setInstance(gamesettings);
+            
+            if (gamesettings.getGameSetting("de.gamebasis.networking.maxClients").equals("")) {
+                gamesettings.addGameSetting("de.gamebasis.networking.maxClients", "-1");
+            }
+            
             //Gameplugins laden
             GamePluginManager.loadGamePlugins("./ext/server");
             GamePluginManager.simpleInitApp(this);
+            
+            this.gameworld = new GameWorld(this);
+            this.gameworld.loadGameWorld(gamesettings.getGameSetting("de.gamebasis.gameworld.filePath"));
         } catch (IOException ex) {
             Logger.getLogger(ServerMain.class.getName()).log(Level.SEVERE, null, ex);
         }
